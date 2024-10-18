@@ -1,0 +1,4 @@
+*.depend
+bin
+obj
+/*.layout
