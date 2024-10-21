@@ -2,3 +2,8 @@
 bin
 obj
 /*.layout
+*.o
+mfdread
+mfdread.exe
+CMakeFiles
+CMakeCache.txt
