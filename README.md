@@ -3,33 +3,34 @@ Mifare dumps parser
 
 Mifare Classic 1k/4k and Mifare Mini (320 bytes) dumps parser in human readable format.  
 Dumps can be grabbed with [mfterm](https://github.com/4ZM/mfterm), [mfoc](https://github.com/nfc-tools/mfoc) or nfc-mfclassic tools from libnfc.org  
-Dump file size must be 1024 or 4096 bytes.
+Dump file size must be 320, 1024, 2048 or 4096 bytes.
 
-Included ```dump.mfd``` -- Mifare 4k dump for testing.  
+Included ```mfc4k.mfd``` -- Mifare 4k dump for testing, and ```mfc1k.mfd``` -- Mifare 1k dump for testing  
 
 ## Another tools
  - [010 Editor](https://www.sweetscape.com/010editor/) — hex editor that has Mifare template. Very handy for editing `mfd` files.
  - [mfterm](https://github.com/4ZM/mfterm) — Mifare terminal. Also can view and edit `mfd` dumps.
 
-#### Dependencies:
-```easy_install bitstring```  
-or  
-```pip install bitstring```  
+#### Building
+The build should be as simple as running these commands:
 
+    cmake .
+    make
+    
 #### Usage:
-```mfdread.py ./dump.mfd```
+```mfdread ./mfc4k.mfd```
 
-![Mifare mfd dump parser](https://zhovner.com/forever/mfdread1.png)
+![Mifare mfd dump parser](https://github.com/pazourek/mfdread/doc/mfdread1.png)
 
 The total memory of 1024 bytes in Mifare Classic (1k) and 4096 bytes in Mifare 4k is divided into 16 sectors of 64 bytes, each of the sectors is divided into 4 blocks of 16 bytes. Blocks 0, 1 and 2 of each sector can store data and block 3 is used to store keys and access bits (the exception is the ‘Manufacturer Block’ which can not store data).
-![Mifare memory structure](https://zhovner.com/forever/MiFare_Memory_Structure.png)
+![Mifare memory structure](https://github.com/pazourek/mfdread/doc/MiFare_Memory_Structure.png)
 
 The memory of 1KB and 4KB MIFARE Classic cards is ordered in a similar way. On both cards the first block (block 0) contains the UID, BCC, SAK, ATQA and Manufacturer data. This block is locked and cannot be altered. But some times it can be ;)  
-![Mifare zero block structure](https://zhovner.com/forever/0blockmifare.gif)
+![Mifare zero block structure](https://github.com/pazourek/mfdread/doc/0blockmifare.gif)
 
 ##### Access bits
 Access bits define the way the data in the sector trailer and the data blocks can be accessed. Access bits are stored twice – inverted and non-inverted in the sector trailer as shown in the images.
-![Mifare zero block structure](https://zhovner.com/forever/MiFare_Access_Bits.gif)
+![Mifare zero block structure](https://github.com/pazourek/mfdread/doc/MiFare_Access_Bits.gif)
 
 Some examples:
 
@@ -52,7 +53,7 @@ The bits that are bolded and in parentheses are the ones that define access to k
 From the table above I can see that 001 means that Key A can not be read, but can be written and Key B may be read. This is the "transport configuration" and was read from the card that was never used.
 
 Another example where access bits 6,7,8 are 0x78 0x77 0x88  
-![mifare access bits explanation](http://i.imgur.com/zTKl6j3.png)
+![mifare access bits explanation](mifare_access_bits_explanation.png)
 
 #### Terms
 Abbreviation  | Meaning 
@@ -82,35 +83,3 @@ REQA  | Request Command, Type A (command 0x26)
 WUPA | Wake-up type A (command 0x52)
 SEL  | Select Command, Type A
 RFU  | Reserved for future use
-
-
-### SAK (Select Acknowledge, Type A) parsing
-SAK response is 1 bytes length and 2 bytes CRC16.  
-<img width="300" src="https://i.imgur.com/NmUAYR4.png" />
-
-Bit 3 is cascade bit indicates that UID is not complete and additional select needed.  
-<img width="500" src="https://i.imgur.com/5BxyYcm.png" />
-
-
-The bit 6 in the SAK indicates, whether the PICC is compliant to the ISO/IEC14443-4 or not. However, it
-does not necessarily indicate, whether the PICC supports the MIFARE Protocol or not.  
-<img width="500" src="https://i.imgur.com/TUPcVxn.png" />
-
-Other bits in SAK (b1, b2, b4, b5, b7, b8) is not described in ISO 14443-3.  
-
-
-### <a name="ATR"></a>What's really ATR means
-ATR is for contact cards and is specified in ISO 7816. For contacless cards, it is the PC/SC reader (IFD) that generates the ATR.
-
-The ATR is constructed based on:
-
-ATS (Answer to Select) for ISO 14443 Type A cards
-ATQB and ATTRIB bytes for ISO 14443 Type B cards
-The ATR will be of the form 3B 8X 80 01 HB_ATS Parity_Byte where X is the number of bytes of Historical Bytes of ATS (HB_ATS).
-
-The exact construction of ATR for contactless cards is given in section 3.1.3.2.3 of the PC/SC spec.
-
-Given that the only variable is ATS, it should be the same regardless of the reader.
-
-
-
