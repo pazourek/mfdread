@@ -373,6 +373,25 @@ static int print_info(FILE *fp)
                 }
             }
 
+            /* print data of one block in ASCII */
+            pos = 0;
+            for(i=0; i<block_size; i++)
+            {
+                unsigned char *ch = &data[block_start + i];
+                if (isspace(*ch))
+                {
+                    pos+= sprintf( &str_data_ascii[pos], "." );
+                }
+                else if (!isgraph(*ch))
+                {
+                    pos+= sprintf( &str_data_ascii[pos], "." );
+                }
+                else
+                {
+                    pos+= sprintf( &str_data_ascii[pos], "%c", *ch);
+                }
+            }
+
             if((access_condition < 0) || (access_condition > 7))
             {
                 /* invalid access bits */
