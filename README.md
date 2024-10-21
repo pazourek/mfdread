@@ -20,17 +20,17 @@ The build should be as simple as running these commands:
 #### Usage:
 ```mfdread ./mfc4k.mfd```
 
-![Mifare mfd dump parser](https://github.com/pazourek/mfdread/doc/mfdread1.png)
+![Mifare mfd dump parser](doc/mfdread1.png)
 
 The total memory of 1024 bytes in Mifare Classic (1k) and 4096 bytes in Mifare 4k is divided into 16 sectors of 64 bytes, each of the sectors is divided into 4 blocks of 16 bytes. Blocks 0, 1 and 2 of each sector can store data and block 3 is used to store keys and access bits (the exception is the ‘Manufacturer Block’ which can not store data).
-![Mifare memory structure](https://github.com/pazourek/mfdread/doc/MiFare_Memory_Structure.png)
+![Mifare memory structure](doc/MiFare_Memory_Structure.png)
 
 The memory of 1KB and 4KB MIFARE Classic cards is ordered in a similar way. On both cards the first block (block 0) contains the UID, BCC, SAK, ATQA and Manufacturer data. This block is locked and cannot be altered. But some times it can be ;)  
-![Mifare zero block structure](https://github.com/pazourek/mfdread/doc/0blockmifare.gif)
+![Mifare zero block structure](doc/0blockmifare.png)
 
 ##### Access bits
 Access bits define the way the data in the sector trailer and the data blocks can be accessed. Access bits are stored twice – inverted and non-inverted in the sector trailer as shown in the images.
-![Mifare zero block structure](https://github.com/pazourek/mfdread/doc/MiFare_Access_Bits.gif)
+![Mifare zero block structure](doc/MiFare_Access_Bits.png)
 
 Some examples:
 
@@ -53,7 +53,7 @@ The bits that are bolded and in parentheses are the ones that define access to k
 From the table above I can see that 001 means that Key A can not be read, but can be written and Key B may be read. This is the "transport configuration" and was read from the card that was never used.
 
 Another example where access bits 6,7,8 are 0x78 0x77 0x88  
-![mifare access bits explanation](mifare_access_bits_explanation.png)
+![mifare access bits explanation](doc/mifare_access_bits_explanation.png)
 
 #### Terms
 Abbreviation  | Meaning 
@@ -69,7 +69,7 @@ ATQB  | Answer To Request, type B
 SAK  | Select Acknowledge, Type A
 RATS | Request for Answer To Select
 ATS  | Answer To Select 
-ATR  | Anser To Reset [What's really ATR means](#ATR)
+ATR  | Anser To Reset
 APDU  | Application Protocol Data Unit
 DIF  | Dual Interface (cards)
 COS  | Card Operating System
